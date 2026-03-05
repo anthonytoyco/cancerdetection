@@ -27,7 +27,7 @@ X = df.iloc[:, 2:].values
 # Get the target (Diagnosis)
 y = df.iloc[:, 1].values
 
-# Transforms M/B into 1/0 
+# Transforms M/B into 1/0
 le = LabelEncoder()
 y = le.fit_transform(y)
 
@@ -59,12 +59,17 @@ cm = confusion_matrix(y_test, predictions)
 
 # plot using Seaborn
 plt.figure(figsize=(8, 6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-            xticklabels=['Benign (0)', 'Malignant (1)'], 
-            yticklabels=['Benign (0)', 'Malignant (1)'])
-plt.xlabel('Predicted')
-plt.ylabel('Actual')
-plt.title('SVM Confusion Matrix')
+sns.heatmap(
+    cm,
+    annot=True,
+    fmt="d",
+    cmap="Blues",
+    xticklabels=["Benign (0)", "Malignant (1)"],
+    yticklabels=["Benign (0)", "Malignant (1)"],
+)
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("SVM Confusion Matrix")
 plt.show()
 
 # PCA to reduce to 2D
@@ -72,17 +77,16 @@ pca = PCA(n_components=2)
 X_test_pca = pca.fit_transform(X_test)
 
 # train a model on the 2D data for the plot
-model_2d = SVC(kernel='rbf')
+model_2d = SVC(kernel="rbf")
 model_2d.fit(X_test_pca, y_test)
 
 # Create a grid (using more points instead of a fixed small step)
 x_min, x_max = X_test_pca[:, 0].min() - 1, X_test_pca[:, 0].max() + 1
 y_min, y_max = X_test_pca[:, 1].min() - 1, X_test_pca[:, 1].max() + 1
 
-# instead of h=0.02, we tell it to just make 500 steps. 
+# instead of h=0.02, we tell it to just make 500 steps.
 # this works regardless of how big or small your numbers are
-xx, yy = np.meshgrid(np.linspace(x_min, x_max, 500), 
-                     np.linspace(y_min, y_max, 500))
+xx, yy = np.meshgrid(np.linspace(x_min, x_max, 500), np.linspace(y_min, y_max, 500))
 
 # predict and Plot
 Z = model_2d.predict(np.c_[xx.ravel(), yy.ravel()])
@@ -90,10 +94,12 @@ Z = Z.reshape(xx.shape)
 
 plt.figure(figsize=(10, 7))
 plt.contourf(xx, yy, Z, cmap=plt.cm.coolwarm, alpha=0.8)
-plt.scatter(X_test_pca[:, 0], X_test_pca[:, 1], c=y_test, edgecolors='k', cmap=plt.cm.coolwarm)
-plt.title('SVM Decision Boundary (Unscaled Data)')
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
+plt.scatter(
+    X_test_pca[:, 0], X_test_pca[:, 1], c=y_test, edgecolors="k", cmap=plt.cm.coolwarm
+)
+plt.title("SVM Decision Boundary (Unscaled Data)")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
 plt.show()
 
 # 3D PCA visual
@@ -101,13 +107,13 @@ pca_3d = PCA(n_components=3)
 X_3d = pca_3d.fit_transform(X_test)
 
 fig = plt.figure(figsize=(10, 8))
-ax = fig.add_subplot(111, projection='3d')
+ax = fig.add_subplot(111, projection="3d")
 
 # scatter plot for 3D
-ax.scatter(X_3d[:, 0], X_3d[:, 1], X_3d[:, 2], c=y_test, cmap='coolwarm', s=60)
+ax.scatter(X_3d[:, 0], X_3d[:, 1], X_3d[:, 2], c=y_test, cmap="coolwarm", s=60)
 
-ax.set_xlabel('PC1')
-ax.set_ylabel('PC2')
-ax.set_zlabel('PC3')
+ax.set_xlabel("PC1")
+ax.set_ylabel("PC2")
+ax.set_zlabel("PC3")
 plt.title("3D PCA")
 plt.show()
